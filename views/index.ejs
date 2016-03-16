@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head >
+  <title>Registration & Payment</title>
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-messages.min.js">
+  </script>
+
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="javascripts/module.js"></script>
+  <script src="javascripts/controllers/formcontroller.js"></script>
+  <script src="javascripts/services/formservice.js"></script>
+  <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body ng-app="myApp" ng-controller="formCtrl">
+  <div class="container">
+    <h1>Registration & Payment</h1>
+    <form name ="userForm" ng-submit="submitLogin(userForm)" novalidate>
+      <div class="registration-section">
+        <h3>Registration Information</h3>
+        <div class="well">
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">Email:</span>
+            <input required type="email" name ="email" ng-model ="formdata.email" class="form-control" id="basic-url" aria-describedby="email">
+          </div>
+          <span ng-messages="userForm.email.$error">
+            <span ng-message = "required">
+              An email address is required!
+            </span>
+          </span>
+          <span ng-show = "userForm.email.$invalid && !userForm.email.$pristine">
+            Not a valid email address!
+          </span>
+          <div class="input-group">
+            <span class="input-group-addon login-label">Password:</span>
+            <input required type="password" name ="password" ng-model ="formdata.password" class="form-control" id="basic-url" aria-describedby="Password-field" ng-pattern="passPattern">
+          </div>
+          <span ng-messages="userForm.password.$error">
+            <span ng-message = "required">
+              A password with at least 6 characters consisting of at least one uppercase letter, one lower case letter and a number is required!
+            </span>
+
+          </span>
+          <span ng-show = "userForm.password.$dirty && userForm.password.$invalid">
+            Not a valid password!
+          </span>
+          <div ng-show="userForm.password.$valid">
+            <div class="input-group" >
+              <span class="input-group-addon login-label">Confirm:</span>
+              <input required  type="password" name ="passwordConf" ng-model ="formdata.passwordConf" class="form-control" id="basic-url" aria-describedby="Password-confirmation">
+            </div>
+            <span ng-messages="userForm.passwordConf.$error">
+              <span ng-message = "required">
+                The passwords need to match!
+              </span>
+
+            </span>
+            <span ng-show = "userForm.password.$dirty && userForm.password.$viewValue !== userForm.passwordConf.$viewValue">
+              The passwords don't match!
+            </span>
+            <span ng-show = "userForm.password.$dirty && userForm.password.$viewValue === userForm.passwordConf.$viewValue">
+              Confirmed!
+            </span>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PAYMENT SECTION -->
+      <div class ="payment-section">
+        <h3>
+          Payment Information
+        </h3>
+        <div class="well">
+          <div class="input-group">
+            <span class="input-group-addon login-label">First Name:</span>
+            <input required type="text" name ="ccfirst" ng-model ="formdata.ccfirst" class="form-control" id="basic-url" aria-describedby="Credit-Card-First-Name">
+          </div>
+          <span ng-messages="userForm.ccfirst.$error">
+            <span ng-message = "required">
+              A first name is required!
+            </span>
+
+          </span>
+
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">Last Name:</span>
+            <input required type="text" name ="cclast" ng-model ="formdata.cclast" class="form-control" id="basic-url" aria-describedby="Credit-Card-Last-Name">
+          </div>
+
+          <span ng-messages="userForm.cclast.$error">
+            <span ng-message = "required">
+              A last name is required!
+            </span>
+
+          </span>
+
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">Credit Card Number:</span>
+            <input required type="number" name ="ccnum" ng-model ="formdata.ccnum" class="form-control" id="basic-url" aria-describedby="Credit-Card-Number" ng-change ="ccnumCheck()">
+          </div>
+
+          <span ng-messages="userForm.ccnum.$error">
+            <span ng-message = "required">
+              Please enter a valid credit card number!
+            </span>
+          </span>
+          <span ng-show="ccNumValid">
+            That credit card number is valid!
+          </span>
+          <div class="input-group">
+            <span class="input-group-addon login-label">Expiration Date:</span>
+            <input required type="date" name ="ccexp" ng-model ="formdata.ccexp" class="form-control" id="basic-url" aria-describedby="Credit-Card-Expiration-Date">
+          </div>
+
+          <span ng-messages="userForm.ccexp.$error">
+            <span ng-message = "required">
+              Please enter the expiration date of your credit card!
+            </span>
+          </span>
+          <span ng-show="">
+            That number is invalid!
+          </span>
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">CVV:</span>
+            <input required type="number" name ="cccvv" ng-model ="formdata.cccvv" class="form-control" id="basic-url" aria-describedby="Credit-Card-CVV">
+          </div>
+          <span ng-messages="userForm.cccvv.$error">
+            <span ng-message = "required">
+              Please enter the CVV number on the back of your credit card!
+            </span>
+
+          </span>
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">Country</span>
+            <input required type="text" name ="cccountry" ng-model ="formdata.cccountry" class="form-control" id="basic-url" aria-describedby="Credit-Card-Country">
+          </div>
+          <span ng-messages="userForm.cccountry.$error">
+            <span ng-message = "required">
+              Please input the country your card is registered in!
+            </span>
+          </span>
+
+
+
+          <div class="input-group">
+            <span class="input-group-addon login-label">Postal Code:</span>
+            <input required type="text" name ="ccpostal" ng-model ="formdata.ccpostal" class="form-control" id="basic-url" aria-describedby="Credit-Card-Postal-Code">
+          </div>
+          <span ng-messages="userForm.ccpostal.$error">
+            <span ng-message = "required">
+              Please input you postal code!
+            </span>
+          </span>
+
+    <div class ="submit-button">
+          <button  type="submit" ng-disabled ="userForm.$invalid">Submit</button>
+    </div>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+</body>
+</html>
